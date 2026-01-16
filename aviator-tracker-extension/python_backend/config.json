@@ -1,0 +1,106 @@
+{
+  "calibration": {
+    "multiplier_region": {
+      "x": 500,
+      "y": 130,
+      "width": 276,
+      "height": 67
+    },
+    "button1_points": [
+      [
+        169,
+        353
+      ]
+    ],
+    "button2_points": [
+      [
+        142,
+        539
+      ]
+    ],
+    "button3_points": [
+      [
+        91,
+        60
+      ]
+    ],
+    "exp1_points": [
+      [
+        206,
+        310
+      ],
+      [
+        206,
+        310
+      ],
+      [
+        206,
+        310
+      ],
+      [
+        206,
+        310
+      ],
+      [
+        206,
+        310
+      ],
+      [
+        206,
+        310
+      ]
+    ],
+    "exp2_points": [
+      [
+        211,
+        315
+      ],
+      [
+        210,
+        312
+      ],
+      [
+        200,
+        494
+      ],
+      [
+        199,
+        499
+      ],
+      [
+        196,
+        498
+      ]
+    ]
+  },
+  "api": {
+    "endpoint": "http://localhost:5000",
+    "enabled": true
+  },
+  "ocr": {
+    "interval_ms": 1000,
+    "confidence_threshold": 0.7,
+    "tesseract_path": "C:\\Program Files\\Tesseract-OCR\\tesseract.exe",
+    "debug": false
+  },
+  "overlay": {
+    "color": "#22c55e",
+    "opacity": 0.3,
+    "enabled": true,
+    "border_width": 3
+  },
+  "auto_click": {
+    "enabled": false,
+    "delay_ms": 100
+  },
+  "sniper": {
+    "enabled": false,
+    "target_multiplier": 2.0,
+    "sound_enabled": true
+  },
+  "anti_afk": {
+    "enabled": true,
+    "interval_min": 2,
+    "interval_max": 4
+  }
+}

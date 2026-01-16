@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator V2 - High Flyer Pro</title>
+    <link rel="stylesheet" href="simulator_v2.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Control Panel (Floating/Collapsible) -->
+        <div id="control-panel" class="control-panel">
+            <div class="panel-header">
+                <h3>⚙️ Configuración del Simulador</h3>
+                <button id="toggle-panel">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="input-group">
+                    <label>Base de Datos (TXT/CSV)</label>
+                    <input type="file" id="db-upload" accept=".txt,.csv">
+                </div>
+
+                <div class="config-grid">
+                    <div class="input-item">
+                        <label>Saldo Inicial ($)</label>
+                        <input type="number" id="initial-balance" value="7190.48" step="0.1">
+                    </div>
+                    <div class="input-item">
+                        <label>Velocidad (ms)</label>
+                        <input type="number" id="sim-speed" value="1000" min="50" step="50">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Meta de Ganancia ($)</label>
+                    <input type="number" id="target-profit" value="2000">
+                </div>
+
+                <div class="input-group">
+                    <label>Stop Loss ($)</label>
+                    <input type="number" id="stop-loss" value="3000">
+                </div>
+
+                <div class="actions">
+                    <button id="start-sim" class="btn-primary">Iniciar Simulación</button>
+                    <button id="reset-sim" class="btn-secondary">Reiniciar</button>
+                </div>
+
+                <div id="sim-stats" class="stats-box">
+                    <p>Rondas: <span id="stat-rounds">0</span></p>
+                    <p>Ganancias: <span id="stat-profit">$0.00</span></p>
+                    <p>ROI: <span id="stat-roi">0%</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Area -->
+        <main class="game-layout">
+            <div class="top-nav">
+                <div class="nav-left">
+                    <span class="home-icon">🏠</span>
+                    <span class="breadcrumb">Casino > <b>High Flyer</b></span>
+                </div>
+                <div class="nav-right">
+                    <span>Proveedores - <b>Pragmatic Live</b></span>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Left Betting Panels -->
+                <div class="betting-side">
+                    <!-- Bet Panel 1 -->
+                    <div class="bet-card">
+                        <div class="bet-header">
+                            <button class="nav-arrow">‹</button>
+                            <div class="bet-amount-title">Apuesta $ <span class="val">50,00</span></div>
+                            <button class="nav-arrow">›</button>
+                        </div>
+                        <button class="btn-confirm-bet" id="btn-bet-1">
+                            CONFIRMAR APUESTA
+                            <div class="amount">50,00 $</div>
+                        </button>
+                        <div class="auto-controls">
+                            <div class="auto-item">
+                                <span>Cobro automático</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="auto-1">
+                                    <label for="auto-1"></label>
+                                </div>
+                                <div class="target-input">
+                                    <input type="text" value="1.50x">
+                                    <span class="edit-icon">✎</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bet Panel 2 -->
+                    <div class="bet-card">
+                        <div class="bet-header">
+                            <button class="nav-arrow">‹</button>
+                            <div class="bet-amount-title">Apuesta $ <span class="val">50,00</span></div>
+                            <button class="nav-arrow">›</button>
+                        </div>
+                        <button class="btn-confirm-bet" id="btn-bet-2">
+                            CONFIRMAR APUESTA
+                            <div class="amount">50,00 $</div>
+                        </button>
+                        <div class="auto-controls">
+                            <div class="auto-item">
+                                <span>Cobro automático</span>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="auto-2">
+                                    <label for="auto-2"></label>
+                                </div>
+                                <div class="target-input">
+                                    <input type="text" value="2.00x">
+                                    <span class="edit-icon">✎</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Display -->
+                <div class="display-side" id="display-area">
+                    <!-- Logs Floating Area -->
+                    <div id="activity-logs" class="activity-logs">
+                        <div class="log-entry">Esperando base de datos...</div>
+                    </div>
+
+                    <div class="multiplier-center" id="multiplier-text">1.00x</div>
+                    <div class="game-status" id="game-status">ESPERE AL SIGUIENTE JUEGO</div>
+
+                    <div class="bottom-info">
+                        <span class="bets-count">Apuestas cobradas: <span id="win-count">2650</span></span>
+                        <span class="total-pool" id="pool-amount">11.866.468,37 $</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer History -->
+            <div class="history-bar">
+                <div class="history-label">EN JUEGO</div>
+                <div class="history-items" id="history-list">
+                    <!-- Bubbles will be injected here -->
+                    <span class="bubble purple">5,22x</span>
+                    <span class="bubble blue">3,06x</span>
+                    <span class="bubble dark-pink">38,14x</span>
+                    <span class="bubble blue">2,19x</span>
+                    <span class="bubble blue">1,22x</span>
+                    <span class="bubble purple">4,12x</span>
+                </div>
+            </div>
+
+            <!-- User Balance Bar -->
+            <div class="user-bar">
+                <div class="balance-item">
+                    <span class="label">SALDO</span>
+                    <span class="value" id="current-balance">7190,48 $</span>
+                </div>
+                <div class="balance-item">
+                    <span class="label">APUESTA TOTAL</span>
+                    <span class="value" id="total-bet">0,00 $</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mock Extension UI (Optional for realism) -->
+        <div class="extension-mock">
+            <header>
+                <img src="icons/icon16.png" alt="icon">
+                <span>Aviator Tracker Pro</span>
+            </header>
+            <div class="ext-content">
+                <div class="ext-card">
+                    <h4>Estado Actual</h4>
+                    <div class="ext-pattern-box">
+                        <div class="step success">Inicio</div>
+                        <div class="step warning">Resultado < 1.12?</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="simulator_v2.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Historial Maestro - Aviator Tracker Pro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #f1f5f9;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        .analysis-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-left: 4px solid #6366f1;
+        }
+
+        .btn {
+            background: #334155;
+            color: white;
+            border: 1px solid #475569;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn:hover {
+            background: #475569;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e293b;
+            font-size: 13px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            background: #334155;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .success {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .fail {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .obs {
+            font-style: italic;
+            opacity: 0.7;
+            font-size: 12px;
+        }
+
+        h2 {
+            color: #818cf8;
+            font-size: 16px;
+            margin-top: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-trend {
+            background: #4338ca;
+            color: white;
+        }
+
+        .badge-strat {
+            background: #059669;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>📈 Historial de Operaciones y Análisis</h1>
+        <button id="downloadCsvBtn" class="btn">💾 Descargar CSV</button>
+    </div>
+
+    <div class="grid-analysis" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card analysis-box">
+            <h2>🔍 Inteligencia de Patrones</h2>
+            <p>Tendencia: <span id="trendBadge" class="badge badge-trend">-</span></p>
+            <p style="font-size: 13px; opacity: 0.9;"><strong>Análisis:</strong> <span id="adviceText">-</span></p>
+        </div>
+        <div class="card" style="border-left: 4px solid #059669;">
+            <h2>🎯 Recomendación de Estrategia</h2>
+            <p>Estrategia Sugerida: <span id="stratBadge" class="badge badge-strat">-</span></p>
+            <p style="font-size: 12px; opacity: 0.8;">Esta sección usa lógica de varianza cíclica para sugerir el slot
+                que mejor se adapta al comportamiento reciente del algoritmo.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📊 Análisis de Frecuencias por Tiempo</h2>
+        <p style="font-size: 12px; margin-bottom: 10px; opacity: 0.8;">Contabiliza cuántas veces aparece cada rango de
+            multiplicador en los últimos periodos de tiempo.</p>
+        <table id="freqTable" style="margin-top: 10px;">
+            <thead>
+                <tr>
+                    <th>Rango</th>
+                    <th>Últ. 15 min</th>
+                    <th>Últ. 30 min</th>
+                    <th>Últ. 60 min</th>
+                    <th>Total Hist.</th>
+                </tr>
+            </thead>
+            <tbody id="freqTableBody">
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <strong>Métricas de Sesión:</strong>
+        Wins: <span id="sessionWins">0</span> | Losses: <span id="sessionLosses">0</span> |
+        Profit: <span id="sessionProfit" style="font-weight: bold;">ARS 0</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Multiplicador</th>
+                <th>Resultado Sim</th>
+                <th>G/P (Sim)</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody id="historyTableBody">
+            <!-- Data will be populated by JS -->
+        </tbody>
+    </table>
+    <script src="db.js"></script>
+    <script src="history.js"></script>
+</body>
+
+</html>

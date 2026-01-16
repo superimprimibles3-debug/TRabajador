@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Analizador de Estrategia - Aviator Pro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: white;
+            padding: 15px;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .controls {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        input,
+        select {
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: white;
+            padding: 6px;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        label {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #4f46e5;
+        }
+
+        .log-container {
+            flex: 1;
+            overflow-y: auto;
+            background: #1e293b;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 11px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+            background: #334155;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .win {
+            color: #4ade80;
+        }
+
+        .loss {
+            color: #f87171;
+        }
+
+        .summary-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="controls">
+            <label>Fuente de Análisis:</label>
+            <select id="simSource">
+                <option value="real">Cargando datos reales...</option>
+                <option value="mock">Prueba Ficticia (500 rondas)</option>
+            </select>
+            <div class="grid">
+                <div><label>Apuesta 1 (ARS):</label><input type="number" id="s1_bet" value="100"></div>
+                <div><label>Objetivo 1 (X):</label><input type="number" id="s1_target" value="1.5" step="0.1"></div>
+            </div>
+            <div class="grid">
+                <div><label>Apuesta 2 (ARS):</label><input type="number" id="s2_bet" value="100"></div>
+                <div><label>Objetivo 2 (X):</label><input type="number" id="s2_target" value="2.0" step="0.1"></div>
+            </div>
+            <div class="grid">
+                <div><label>Evitar tras > (X):</label><input type="number" id="s_skip" value="10.0" step="0.5"></div>
+                <div><label>Mín Prob Reglas (%):</label><input type="number" id="s_prob" value="50"></div>
+            </div>
+            <div class="grid">
+                <div><label>Meta Ganancia (ARS):</label><input type="number" id="s_tp" value="1000"></div>
+                <div><label>Límite Rondas:</label><input type="number" id="s_maxR" value="50"></div>
+            </div>
+            <button id="runSimBtn" class="btn">INICIAR ANÁLISIS EN VIVO</button>
+        </div>
+        <div id="summary" class="summary-box" style="display:none;">
+            <span id="sum_balance" style="font-size:16px; font-weight:bold;"></span>
+            <span id="sum_stats" style="opacity:0.8;"></span>
+        </div>
+        <div class="log-container">
+            <div id="simLog">Configura los parámetros para comenzar...</div>
+        </div>
+    </div>
+    <script src="simulator.js"></script>
+</body>
+
+</html>

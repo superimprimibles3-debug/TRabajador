@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Tracker Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="theme-crypto.css">
+    <style>
+        /* Minimal utility styles only - main theme in theme-crypto.css */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-2 {
+            gap: 8px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <header>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="icons/icon48.png" width="20" height="20" alt="Logo">
+            <h1>Aviator Tracker</h1>
+        </div>
+        <div class="status-indicator" id="global-status" title="Conexión Extension"></div>
+    </header>
+
+    <!-- DASHBOARD CENTRALIZADO -->
+    <div
+        style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 8px; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-size: 10px; color: #94a3b8; font-weight: 600;">SESIÓN ACTIVA</span>
+                <span id="partida-number" style="font-weight: 800; font-size: 16px; color: #facc15;">#1</span>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-size: 10px; color: #94a3b8; font-weight: 600;">TARGET</span>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <input type="number" id="input-target" class="number-input" step="0.01" value="1.11"
+                        style="width: 45px; height: 18px; font-size: 11px;">
+                    <span style="font-weight: 700; color: var(--success);">x</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID DE CONTADORES (Los 8 Principales) -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+            <div class="status-box" style="margin-top: 0; padding: 6px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Rondas Totales</div>
+                <div id="stat-total-rounds" style="font-size: 16px; font-weight: 800; color: #fff;">0</div>
+            </div>
+            <div class="status-box" style="margin-top: 0; padding: 6px;">
+                <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Sin Apostar</div>
+                <div id="stat-rounds-no-bet" style="font-size: 16px; font-weight: 800; color: #64748b;">0</div>
+            </div>
+            <div class="status-box" style="margin-top: 0; padding: 6px; border-left: 3px solid var(--success);">
+                <div style="font-size: 9px; color: var(--success); text-transform: uppercase;">Wins</div>
+                <div id="stat-wins" style="font-size: 16px; font-weight: 800; color: var(--success);">0</div>
+            </div>
+            <div class="status-box" style="margin-top: 0; padding: 6px; border-left: 3px solid var(--danger);">
+                <div style="font-size: 9px; color: var(--danger); text-transform: uppercase;">Losses</div>
+                <div id="stat-losses" style="font-size: 16px; font-weight: 800; color: var(--danger);">0</div>
+            </div>
+        </div>
+
+        <!-- CLICKS DETALLADOS -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: 8px;">
+            <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 4px;">
+                <div style="font-size: 8px; color: #94a3b8;">CLICK AP.</div>
+                <div id="stat-click-apostar" style="font-weight: 700; font-size: 12px;">0</div>
+            </div>
+            <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 4px;">
+                <div style="font-size: 8px; color: #94a3b8;">CLICK EXP.</div>
+                <div id="stat-click-exp" style="font-weight: 700; font-size: 12px;">0</div>
+            </div>
+            <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 4px;">
+                <div style="font-size: 8px; color: #94a3b8;">CLICK FALSO</div>
+                <div id="stat-click-falso" style="font-weight: 700; font-size: 12px;">0</div>
+            </div>
+        </div>
+
+        <div style="font-size: 9px; color: #475569; text-align: center; margin-top: 8px; letter-spacing: 1px;">
+            CRONÓMETRO: <span id="session-time">00:00:00</span>
+        </div>
+    </div>
+
+    <!-- SECCIÓN HISTORIAL -->
+    <div class="panel-section" draggable="true" id="section-history">
+        <div class="section-header">
+            <h3>📜 Historial</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="history-section" class="section-content">
+            <div id="history-container" class="history-grid">
+                <!-- Se llena dinámicamente -->
+            </div>
+            <div style="margin-top: 8px; text-align: right;">
+                <button id="btn-clear-history" class="text-btn">Limpiar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE RASTREO SIMPLIFICADA (SOLO OCR) -->
+    <div class="panel-section" draggable="true" id="section-ocr">
+        <div class="section-header">
+            <h3>🎯 Rastreo</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="tracking-section" class="section-content">
+            <!-- Solo Contenido OCR -->
+            <div id="ocr-tracking-container">
+                <div class="control-row" style="margin-bottom: 10px;">
+                    <button id="btn-calibrate-ocr" class="action-btn"
+                        style="flex: 1; min-height: 35px; border: 1px solid #22c55e;">🔍 Capturar Zona
+                        Multiplicador</button>
+                    <button id="btn-reset-ocr" class="action-btn secondary" style="width: 40px;"
+                        title="Reset">🗑️</button>
+                </div>
+
+                <div class="control-row">
+                    <span class="label">Activar Rastreo</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-ocr">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="status-box" id="ocr-status-box">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span style="color: #94a3b8; font-size: 12px;">Último Valor:</span>
+                        <div id="python-status-indicator" class="status-indicator" title="Servidor Python"></div>
+                    </div>
+                    <div class="value-display" id="ocr-value-display">--</div>
+                    <div style="font-size: 10px; color: #64748b; text-align: right; margin-top: 2px;"
+                        id="ocr-timestamp"></div>
+                </div>
+
+                <!-- Consola de Depuración OCR -->
+                <div id="ocr-console-container" style="margin-top: 10px;">
+                    <div
+                        style="font-size: 10px; color: #94a3b8; margin-bottom: 4px; display: flex; justify-content: space-between;">
+                        <span>📟 CONSOLA DE DIAGNÓSTICO</span>
+                        <span id="preview-fps" style="color: #64748b;">-- fps</span>
+                    </div>
+                    <div id="ocr-log-console"
+                        style="background: #000; height: 80px; border: 1px solid #334155; border-radius: 4px; padding: 6px; font-family: 'Consolas', 'Monaco', monospace; font-size: 10px; color: #22c55e; overflow-y: auto; line-height: 1.2; text-shadow: 0 0 2px rgba(34, 197, 94, 0.4);">
+                        <div style="color: #64748b;">> Esperando inicio...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN CALIBRACIÓN DE BOTONES -->
+    <div class="panel-section" draggable="true" id="section-calibration">
+        <div class="section-header">
+            <h3>⚙️ Calibración de Botones</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="calibration-section" class="section-content">
+            <div class="status-box" style="margin-bottom: 8px; font-size: 11px; color: var(--text-muted);">
+                <b>Instrucciones:</b><br>
+                1. Click "Calibrar".<br>
+                2. Click en botones de apuesta.<br>
+                3. ENTER para Guardar.
+            </div>
+
+            <!-- Botón 1 -->
+            <div style="margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                <div class="control-row">
+                    <span class="label">Botón 1 (Izquierda)</span>
+                    <span id="status-cal-1" class="status-badge"
+                        style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">No calib.</span>
+                </div>
+                <div class="control-row">
+                    <button id="btn-cal-1" class="action-btn" style="flex: 1;">🎯 Calibrar Btn 1</button>
+                    <button id="btn-reset-cal-1" class="action-btn secondary"
+                        style="width: 30px; margin-left: 6px;">🗑️</button>
+                </div>
+            </div>
+
+            <!-- Botón 2 -->
+            <div>
+                <div class="control-row">
+                    <span class="label">Botón 2 (Derecha)</span>
+                    <span id="status-cal-2" class="status-badge"
+                        style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">No calib.</span>
+                </div>
+                <div class="control-row">
+                    <button id="btn-cal-2" class="action-btn" style="flex: 1;">🎯 Calibrar Btn 2</button>
+                    <button id="btn-reset-cal-2" class="action-btn secondary"
+                        style="width: 30px; margin-left: 6px;">🗑️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN SNIPER TRIGGER -->
+    <div class="panel-section" draggable="true" id="section-sniper">
+        <div class="section-header">
+            <h3>🎯 Sniper Trigger</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="sniper-section" class="section-content">
+            <div class="control-row">
+                <span class="label">Activar Sniper</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-sniper">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="control-row" style="margin-top: 8px;">
+                <span class="label">Sonido Alerta</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-sound">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <!-- FASE 3: Toggle Anti-AFK (Falsas Apuestas) -->
+            <div class="control-row" style="margin-top: 8px;">
+                <span class="label" title="Activar/desactivar falsas apuestas automáticas">Falsas Apuestas
+                    (Anti-AFK)</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-anti-afk" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN APUESTA EXPONENCIAL -->
+    <div class="panel-section" draggable="true" id="section-exponential">
+        <div class="section-header">
+            <h3>🚀 Apuesta Exponencial</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="exponential-section" class="section-content">
+            <!-- Botón de Calibración Independiente 2 -->
+            <div style="margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                <div class="control-row">
+                    <span class="label">Auto-Retiro (Botón 2)</span>
+                    <span id="status-cal-2" class="status-badge"
+                        style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Sin calibrar</span>
+                </div>
+                <div class="control-row">
+                    <button id="btn-calibrate-2" class="action-btn" style="flex: 1;">
+                        🎯 Calibrar Posición
+                    </button>
+                    <button id="btn-reset-cal-2" class="action-btn secondary"
+                        style="width: 30px; margin-left: 6px;">🗑️</button>
+                </div>
+            </div>
+
+            <!-- Botón de Calibración Recarga -->
+            <div>
+                <div class="control-row">
+                    <span class="label">Botón Recarga (F5)</span>
+                    <span id="status-cal-reload" class="status-badge"
+                        style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">Sin calibrar</span>
+                </div>
+                <div class="control-row">
+                    <button id="btn-calibrate-reload" class="action-btn" style="flex: 1;">
+                        🔄 Calibrar Reload
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="calibration-overlay-hint" class="overlay-hint" style="display: none;">
+            <div class="hint-content">
+                <div class="hint-spinner"></div>
+                <p>Haz click en el botón en la pantalla...</p>
+                <button id="btn-cancel-cal" class="text-btn">Cancelar</button>
+            </div>
+        </div>
+        <!-- Toggle Post-Win -->
+        <div class="control-row"
+            style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 5px;">
+            <span class="label" title="Apostar tras victoria detectada en OCR">Apostar Post-Win (4s)</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle-exp-trigger">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+    </div>
+
+    <!-- SECCIÓN DIAGNÓSTICO Y TESTS -->
+    <div class="panel-section" draggable="true" id="section-diagnostic">
+        <div class="section-header">
+            <h3>🧪 Pruebas de Funcionamiento</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="diagnostic-section" class="section-content">
+            <div style="margin-bottom: 10px; font-size: 10px; color: #94a3b8; line-height: 1.3;">
+                ⚠️ Nota: Los tests realizan <b>clicks reales</b> en las coordenadas calibradas.
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <button id="btn-test-apostar" class="action-btn small">🖱️ Test Apostar</button>
+                <button id="btn-test-falso" class="action-btn small secondary">🖱️ Test Falso (A+C)</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <button id="btn-test-exp" class="action-btn small" style="background: #8b5cf6;">🚀 Test Exp.</button>
+                <button id="btn-test-reload" class="action-btn small" style="background: #f59e0b;">🔄 Test
+                    Recarga</button>
+            </div>
+
+            <div class="control-row"
+                style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+                <span class="label">Probar Audio de Alerta</span>
+                <button id="btn-test-sound" class="action-btn secondary small" style="width: 40px;">🔊</button>
+            </div>
+
+            <div class="control-row" style="margin-top: 8px;">
+                <span class="label" title="Recargar página si ocurre error crítico">Auto-Recarga Página</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-auto-reload" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div id="test-status" style="margin-top: 8px; font-size: 9px; color: #64748b; text-align: center;">
+                Listo para diagnóstico.
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN BYPASS -->
+    <div class="panel-section" draggable="true" id="section-bypass">
+        <div class="section-header">
+            <h3>🛡️ Bypass de Diálogos</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="bypass-section" class="section-content">
+            <div class="control-row">
+                <span class="label">Cierres Automáticos:</span>
+                <span id="bypass-count" style="font-weight: bold; color: #22c55e;">0</span>
+            </div>
+            <div class="control-row">
+                <span class="label">Recargas por Sesión:</span>
+                <span id="bypass-reloads" style="font-weight: bold; color: #f59e0b;">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DB -->
+    <div class="panel-section" draggable="true" id="section-db">
+        <div class="section-header">
+            <h3>🗄️ Base de Datos</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="db-section" class="section-content">
+            <!-- Controles Globales -->
+            <div class="control-row" style="margin-bottom: 10px;">
+                <button id="btn-new-game" class="action-btn" style="background: #10b981; flex: 1;">✨ Nueva
+                    Partida</button>
+            </div>
+            <div class="control-row" style="margin-bottom: 10px;">
+                <button id="btn-open-db" class="action-btn secondary" style="width: 100%;">📊 Ver / Ocultar
+                    Datos</button>
+            </div>
+
+            <!-- DB VIEW (Initially Hidden) -->
+            <div id="db-view-container"
+                style="display: none; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px;">
+                <div class="control-row">
+                    <span class="label" id="db-total-count">Registros: 0</span>
+                    <button id="btn-export-db" class="text-btn">💾 TXT</button>
+                    <button id="btn-clear-db" class="text-btn" style="color: #ef4444;">🗑️</button>
+                </div>
+                <div style="max-height: 200px; overflow-y: auto; margin-top: 5px; border: 1px solid #334155;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                        <thead style="background: #1e293b; position: sticky; top: 0;">
+                            <tr>
+                                <th style="padding: 4px; text-align: left;">P.</th>
+                                <th style="padding: 4px; text-align: left;">R.</th>
+                                <th style="padding: 4px; text-align: right;">Multi</th>
+                                <th style="padding: 4px; text-align: right;">Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="db-table-body">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE 3: SECCIÓN DE FILTROS -->
+    <div class="panel-section" draggable="true" id="section-filters">
+        <div class="section-header">
+            <h3>📊 Filtros</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="analysis-section" class="section-content">
+            <!-- Contenedor de Filtros Animados -->
+            <div id="filters-status-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <!-- Se llena dinámicamente con renderFilterSteps() -->
+                <div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; font-size: 11px; padding: 20px;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">⏳</div>
+                    <div>Esperando datos de análisis...</div>
+                    <div style="font-size: 9px; margin-top: 5px; color: #64748b;">
+                        Activa el OCR y espera 12+ rondas
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="sidepanel.js"></script>
+
+</body>
+
+</html>

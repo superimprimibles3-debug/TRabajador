@@ -1,0 +1,6 @@
+flask>=2.3.0
+flask-cors>=4.0.0
+pytesseract>=0.3.10
+PyQt5>=5.15.0
+pyautogui>=0.9.54
+Pillow>=10.0.0

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Tracker</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1>✈️ Aviator Tracker</h1>
+                <div class="status-indicator" id="statusIndicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Activo</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="stats-section">
+            <h2>Estadísticas en Tiempo Real</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Rondas</div>
+                    <div class="stat-value" id="totalRounds">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Promedio</div>
+                    <div class="stat-value" id="average">0.00x</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Máximo</div>
+                    <div class="stat-value highlight-max" id="max">0.00x</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Mínimo</div>
+                    <div class="stat-value highlight-min" id="min">0.00x</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="recent-section">
+            <h2>Últimos 10 Multiplicadores</h2>
+            <div id="recentList" class="recent-list">
+                <p class="empty-state">Esperando datos...</p>
+            </div>
+        </section>
+
+        <section class="distribution-section">
+            <h2>Distribución</h2>
+            <div id="distribution" class="distribution-container"></div>
+        </section>
+
+        <section class="actions-section">
+            <button id="exportBtn" class="btn btn-primary">
+                📊 Exportar CSV
+            </button>
+            <button id="clearBtn" class="btn btn-danger">
+                🗑️ Limpiar Datos
+            </button>
+            <button id="viewAllBtn" class="btn btn-secondary">
+                📋 Ver Todos
+            </button>
+        </section>
+
+        <footer class="footer">
+            <p>Datos guardados localmente en tu navegador</p>
+        </footer>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
